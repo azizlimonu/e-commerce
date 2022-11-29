@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import List from '../../components/List/List';
 import useFetch from '../../hooks/useFetch';
 import './Products.scss';
+// import debounce from 'lodash.debounce';
 
 const Products = () => {
   const catId = parseInt(useParams().id);
@@ -15,6 +16,11 @@ const Products = () => {
     `/subCategories?[filters][categories][id][$eq]=${catId}`
   );
   // console.log(data);
+
+  // handle filter
+  const updatePrice = (e) => setMaxPrice(e?.target?.value);
+  // handle debounce on filter
+  // const debounceOnChange = debounce(updatePrice, 800);
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -60,7 +66,7 @@ const Products = () => {
               min={0}
               max={10000}
               value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
+              onChange={updatePrice}
             />
             <span>{maxPrice}</span>
           </div>
