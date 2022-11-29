@@ -57,7 +57,15 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::subcategory.subcategory",
-      "inversedBy": "products"
+      "mappedBy": "products"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "normal",
+        "featured",
+        "trending"
+      ]
     }
   }
 }
