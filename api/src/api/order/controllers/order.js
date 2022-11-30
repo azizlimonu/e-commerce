@@ -11,7 +11,6 @@ module.exports = createCoreController('api::order.order', ({ strapi }) => ({
   async create(ctx) {
     const { products } = ctx.request.body;
     try {
-      // payments: promise all for multiple product
       const lineItems = await Promise.all(
         products.map(async (product) => {
           const item = await strapi
@@ -31,7 +30,6 @@ module.exports = createCoreController('api::order.order', ({ strapi }) => ({
         })
       );
 
-      // checkout session
       const session = await stripe.checkout.sessions.create({
         shipping_address_collection: { allowed_countries: ['US', 'CA'] },
         payment_method_types: ["card"],
@@ -41,16 +39,15 @@ module.exports = createCoreController('api::order.order', ({ strapi }) => ({
         line_items: lineItems,
       });
 
-      // Strapi create
       await strapi
         .service("api::order.order")
         .create({ data: { products, stripeId: session.id } });
 
       return { stripeSession: session };
-      
     } catch (error) {
       ctx.response.status = 500;
-      return error;
+      console.log(error);
+      return { error };
     }
   }
 }));
